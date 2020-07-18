@@ -1,10 +1,10 @@
 import 'package:FormValidation/src/blocs/provider.dart';
 import 'package:FormValidation/src/providers/usuario_provider.dart';
-import 'package:FormValidation/src/utils/utils.dart' as utils;
 import 'package:flutter/material.dart';
+import 'package:FormValidation/src/utils/utils.dart' as utils;
 
-class LoginPage extends StatelessWidget {
-  final usuarioProvider = UsuarioProvider();
+class RegistroPage extends StatelessWidget {
+  final usuarioProvider = new UsuarioProvider();
 
   @override
   Widget build(BuildContext context) {
@@ -94,7 +94,7 @@ class LoginPage extends StatelessWidget {
             ),
             child: Column(
               children: <Widget>[
-                Text('Bienvenido', style: TextStyle(fontSize: 20.0),),
+                Text('Nueva Cuenta', style: TextStyle(fontSize: 20.0),),
                 SizedBox(height: 30.0,),
                 _crearEmail(bloc),
                 SizedBox(height: 30.0,),
@@ -105,8 +105,8 @@ class LoginPage extends StatelessWidget {
             ),
           ),
           FlatButton(
-            onPressed: () => Navigator.pushReplacementNamed(context, 'registro'), 
-            child: Text('Registrarse')
+            onPressed: () => Navigator.pushReplacementNamed(context, 'login'), 
+            child: Text('¿Ya tienes una cuenta? Inicia Sesión')
           ),
           SizedBox(height: 80.0,)
         ],
@@ -162,7 +162,7 @@ class LoginPage extends StatelessWidget {
         return RaisedButton(
           child: Container(
             padding: EdgeInsets.symmetric(horizontal: 80.0, vertical: 15.0),
-            child: Text('Ingresar'),
+            child: Text('Registrar'),
           ),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10.0)
@@ -170,24 +170,20 @@ class LoginPage extends StatelessWidget {
           elevation: 0.0,
           color: Colors.deepPurple,
           textColor: Colors.white,
-          onPressed: !snapshot.hasData ? null : () => _login(bloc, context)
+          onPressed: !snapshot.hasData ? null : () => _register(bloc, context)
         );
       },
     );
   }
 
-  _login(LoginBloc bloc, BuildContext context) async {
-    Map info = await usuarioProvider.login(bloc.email, bloc.password);
+  _register(LoginBloc bloc, BuildContext context) async {
+    Map info = await usuarioProvider.nuevoUsuario(bloc.email, bloc.password);
 
     if (info['ok']) { 
       Navigator.pushReplacementNamed(context, 'home');
     } else {
-      utils.mostrarAlerta(context, 'El usuario o contraseña son incorrectos');
+      utils.mostrarAlerta(context, 'Usuario ya existente');
     }
     // Navigator.pushReplacementNamed(context, 'home');
-    // print('=====================');
-    // print('Email: ${bloc.email}');
-    // print('Contraseña: ${bloc.password}');
-    // print('=====================');
   }
 }
